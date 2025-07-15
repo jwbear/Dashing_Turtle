@@ -1,0 +1,21 @@
+services:
+  db:
+    image: mariadb:10.11.5
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
+      MARIADB_DATABASE: ${DB_NAME:-dtuser_DASH}
+      MARIADB_USER: ${DB_USER:-dtuser}
+      MARIADB_PASSWORD: ${DB_PASSWORD:-dtpass}
+      MARIADB_GENERAL_LOG: 1
+      MARIADB_GENERAL_LOG_FILE: /var/lib/mysql/general.log
+    ports:
+      - "3307:3306"
+    volumes:
+      # Files
+      -  db_datad:/var/lib/mysql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./db/my.cnf:/etc/mysql/conf.d/my.cnf
+
+volumes:
+  db_datad:
